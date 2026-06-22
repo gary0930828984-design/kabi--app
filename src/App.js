@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+＃import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   PieChart,
   Pie,
@@ -1980,7 +1980,7 @@ const S = {
     fontSize: 15,
     cursor: 'pointer',
   },
-  page: { padding: '16px', paddingBottom: 80 },
+  page: { padding: '16px', paddingBottom: 16 },
   pageTitle: {
     fontFamily: 'Georgia,serif',
     color: '#fb923c',
