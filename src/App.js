@@ -37,596 +37,94 @@ const fmtPct = (n) => (n == null ? '—' : (n * 100).toFixed(1) + '%');
 const genId = () => Math.random().toString(36).slice(2, 9);
 
 const SEED_PRODUCTS = [
-  {
-    id: 'vxo7jx5',
-    name: 'Cx01蒼龍勇氣',
-    price: 700,
-    costJpy: 2090,
-    costTwd: 438.9,
-    stock: 6,
-    sold: 5,
-    note: '',
-  },
-  {
-    id: 'da7i7oh',
-    name: 'Cx02魔導至尊',
-    price: 700,
-    costJpy: 1999,
-    costTwd: 419.79,
-    stock: 4,
-    sold: 4,
-    note: '',
-  },
-  {
-    id: 'rjtbi9s',
-    name: 'Cx03英仙幽冥',
-    price: 500,
-    costJpy: 1520,
-    costTwd: 319.2,
-    stock: 9,
-    sold: 6,
-    note: '',
-  },
-  {
-    id: 'gjm5j6y',
-    name: 'Cx05抽抽包',
-    price: 0,
-    costJpy: 1300,
-    costTwd: 273,
-    stock: 6,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'vd38fil',
-    name: 'CX07天馬爆擊',
-    price: 900,
-    costJpy: 2080,
-    costTwd: 436.8,
-    stock: 10,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: '5yd5yx4',
-    name: 'Cx09焰神滅世',
-    price: 550,
-    costJpy: 0,
-    costTwd: 0,
-    stock: 1,
-    sold: 1,
-    note: '⚠️ 缺成本',
-  },
-  {
-    id: 'yi5vsk0',
-    name: 'Cx10銀狼狩獵',
-    price: 600,
-    costJpy: 1610,
-    costTwd: 338.1,
-    stock: 8,
-    sold: 6,
-    note: '',
-  },
-  {
-    id: 'qd51cig',
-    name: 'CX12鳳凰閃焰',
-    price: 600,
-    costJpy: 1499,
-    costTwd: 314.79,
-    stock: 6,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'ezcupz3',
-    name: 'Cx13龍王閃擊',
-    price: 600,
-    costJpy: 1499,
-    costTwd: 314.79,
-    stock: 6,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'xyiwrxf',
-    name: 'Cx14騎士堡壘',
-    price: 700,
-    costJpy: 0,
-    costTwd: 0,
-    stock: 7,
-    sold: 1,
-    note: '⚠️ 缺成本',
-  },
-  {
-    id: 'i3vb7z3',
-    name: 'Cx15邪神狂怒',
-    price: 600,
-    costJpy: 1399,
-    costTwd: 293.79,
-    stock: 9,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'dknbg7n',
-    name: 'Cx17-劍心',
-    price: 650,
-    costJpy: 1480,
-    costTwd: 310.8,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'yhtuyqz',
-    name: 'Cx17抽抽包',
-    price: 0,
-    costJpy: 1480,
-    costTwd: 310.8,
-    stock: 3,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: '2nlg3lc',
-    name: 'Cx17抽抽包',
-    price: 650,
-    costJpy: 1480,
-    costTwd: 310.8,
-    stock: 4,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'd33nrrh',
-    name: 'Bx01蒼龍神劍',
-    price: 650,
-    costJpy: 1800,
-    costTwd: 378,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'afm3lrm',
-    name: 'Bx13騎士長槍',
-    price: 550,
-    costJpy: 1600,
-    costTwd: 336,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: '8uxgxln',
-    name: 'Bx26獨角劍心',
-    price: 550,
-    costJpy: 1380,
-    costTwd: 289.8,
-    stock: 1,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: '6ss0eiq',
-    name: 'Bx31暴龍抽抽包',
-    price: 600,
-    costJpy: 1400,
-    costTwd: 294,
-    stock: 6,
-    sold: 5,
-    note: '',
-  },
-  {
-    id: '41fd559',
-    name: 'Bx33皓戰猛虎',
-    price: 500,
-    costJpy: 1140,
-    costTwd: 239.4,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: '5brr0nu',
-    name: 'Bx34蒼穹龍騎士',
-    price: 900,
-    costJpy: 1880,
-    costTwd: 394.8,
-    stock: 1,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'krjt9gp',
-    name: 'Bx35-藍鳳',
-    price: 1500,
-    costJpy: 1600,
-    costTwd: 336,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'mjeutcg',
-    name: 'Bx35-神杖',
-    price: 2500,
-    costJpy: 1600,
-    costTwd: 336,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'b8oblcm',
-    name: 'Bx44三角強襲',
-    price: 450,
-    costJpy: 1299,
-    costTwd: 272.79,
-    stock: 4,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: '7jst3mq',
-    name: 'Bx48黑色抽抽包',
-    price: 1000,
-    costJpy: 1700,
-    costTwd: 357,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: '70cxmmd',
-    name: 'Bx48黑色抽抽包',
-    price: 900,
-    costJpy: 1700,
-    costTwd: 357,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'syu369i',
-    name: 'Bx48黑色抽抽包',
-    price: 0,
-    costJpy: 1700,
-    costTwd: 357,
-    stock: 2,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'k89mvei',
-    name: 'Bx49蒼龍突擊',
-    price: 1300,
-    costJpy: 2199,
-    costTwd: 461.79,
-    stock: 17,
-    sold: 14,
-    note: '',
-  },
-  {
-    id: '80vipi2',
-    name: 'Bx49蒼龍突擊',
-    price: 1600,
-    costJpy: 2199,
-    costTwd: 461.79,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'zm9wdgi',
-    name: 'Bx49蒼龍突擊',
-    price: 1500,
-    costJpy: 2199,
-    costTwd: 461.79,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: '2wtjc0h',
-    name: 'UX02惡魔重錘',
-    price: 800,
-    costJpy: 1620,
-    costTwd: 340.2,
-    stock: 2,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: '7zscugj',
-    name: 'Ux09武士星劍',
-    price: 1000,
-    costJpy: 3300,
-    costTwd: 693,
-    stock: 5,
-    sold: 5,
-    note: '',
-  },
-  {
-    id: 'kcy2zte',
-    name: 'Ux09武士星劍',
-    price: 900,
-    costJpy: 3300,
-    costTwd: 693,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'us3i468',
-    name: 'Ux11衝擊龍神',
-    price: 1500,
-    costJpy: 2170,
-    costTwd: 455.7,
-    stock: 3,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'omgv3lo',
-    name: 'Ux11衝擊龍神',
-    price: 1400,
-    costJpy: 2170,
-    costTwd: 455.7,
-    stock: 3,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'dxbbkiv',
-    name: 'Ux14天蠍長矛',
-    price: 700,
-    costJpy: 1880,
-    costTwd: 394.8,
-    stock: 2,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: '1rhepnu',
-    name: 'UX17隕星龍騎士',
-    price: 1100,
-    costJpy: 1880,
-    costTwd: 394.8,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'r265elh',
-    name: 'Ux18抽抽包',
-    price: 700,
-    costJpy: 1600,
-    costTwd: 336,
-    stock: 1,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'z3ljk7h',
-    name: 'Ux19彈丸獅鷲',
-    price: 650,
-    costJpy: 2080,
-    costTwd: 436.8,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'ugoayrp',
-    name: 'Ux19彈丸獅鷲',
-    price: 950,
-    costJpy: 2080,
-    costTwd: 436.8,
-    stock: 3,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'gapr6tq',
-    name: 'Ux19彈丸獅鷲',
-    price: 1000,
-    costJpy: 2080,
-    costTwd: 436.8,
-    stock: 14,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'pjxq74h',
-    name: 'Bx09通行證',
-    price: 1500,
-    costJpy: 2700,
-    costTwd: 567,
-    stock: 3,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'dlq8h0k',
-    name: 'Bx09通行證',
-    price: 1500,
-    costJpy: 3300,
-    costTwd: 693,
-    stock: 4,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'd3qkx3r',
-    name: 'Bx09通行證',
-    price: 1700,
-    costJpy: 4000,
-    costTwd: 840,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'm7703ms',
-    name: 'BX41握把（紅）',
-    price: 400,
-    costJpy: 1080,
-    costTwd: 226.8,
-    stock: 3,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: '3guf9i4',
-    name: 'Bx42握把（藍）',
-    price: 400,
-    costJpy: 1350,
-    costTwd: 283.5,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'azfm7qo',
-    name: 'Bx18發射器（黑）',
-    price: 400,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 7,
-    sold: 6,
-    note: '',
-  },
-  {
-    id: 'lxyea7k',
-    name: 'BX28發射器（白）',
-    price: 500,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'f4rgf5o',
-    name: 'BX00發射器（綠）',
-    price: 500,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'asq0adk',
-    name: 'Bx00發射器（橘）',
-    price: 500,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 3,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'n2dar8s',
-    name: 'Bx00發射器（粉）',
-    price: 500,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 1,
-    sold: 0,
-    note: '',
-  },
-  {
-    id: 'cmpwuay',
-    name: 'Bx25陀螺包（黑）',
-    price: 1200,
-    costJpy: 3400,
-    costTwd: 714,
-    stock: 2,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: '9u8n1gr',
-    name: 'BX43陀螺包（白）',
-    price: 1100,
-    costJpy: 3480,
-    costTwd: 730.8,
-    stock: 5,
-    sold: 2,
-    note: '',
-  },
-  {
-    id: 'irsr1mq',
-    name: 'BX-00讀賣巨人聯名款',
-    price: 2300,
-    costJpy: 5500,
-    costTwd: 1155,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'qsafnri',
-    name: 'BX-00鮫鯊鋒鰭',
-    price: 1100,
-    costJpy: 4000,
-    costTwd: 840,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: '55m6fuz',
-    name: '一番賞發射器',
-    price: 1400,
-    costJpy: 1350,
-    costTwd: 283.5,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'pws1ocb',
-    name: 'Bx10戰鬥盤',
-    price: 1800,
-    costJpy: 2250,
-    costTwd: 472.5,
-    stock: 6,
-    sold: 3,
-    note: '',
-  },
-  {
-    id: 'jdy6alu',
-    name: 'Cx16龍王戰鬥盤',
-    price: 3200,
-    costJpy: 5980,
-    costTwd: 1255.8,
-    stock: 2,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: 'uwuxsfw',
-    name: 'Cx04戰鬥盤',
-    price: 2700,
-    costJpy: 6800,
-    costTwd: 1428,
-    stock: 1,
-    sold: 1,
-    note: '',
-  },
-  {
-    id: '1q33eox',
-    name: 'Bx47發射器 左旋（紅）',
-    price: 450,
-    costJpy: 990,
-    costTwd: 207.9,
-    stock: 5,
-    sold: 0,
-    note: '',
-  },
+  {id:'cuc6oa2',name:'Cx01蒼龍勇氣',price:700,costJpy:2090,costTwd:438.9,stock:8,sold:6,note:''},
+  {id:'9oek6la',name:'Cx02魔導至尊',price:700,costJpy:1999,costTwd:419.79,stock:4,sold:4,note:''},
+  {id:'c202rl8',name:'Cx03英仙幽冥',price:500,costJpy:1520,costTwd:319.2,stock:9,sold:6,note:''},
+  {id:'6xpjilt',name:'Cx05抽抽包',price:0,costJpy:1300,costTwd:273.0,stock:6,sold:0,note:''},
+  {id:'4nt4s0f',name:'CX07天馬爆擊',price:900,costJpy:2080,costTwd:436.8,stock:12,sold:2,note:''},
+  {id:'f7773qa',name:'Cx09焰神滅世',price:550,costJpy:0,costTwd:0,stock:1,sold:1,note:'⚠️ 缺成本'},
+  {id:'wrsbwfm',name:'Cx10銀狼狩獵',price:600,costJpy:1610,costTwd:338.1,stock:8,sold:6,note:''},
+  {id:'cxaqboe',name:'CX12鳳凰閃焰',price:600,costJpy:1499,costTwd:314.79,stock:6,sold:3,note:''},
+  {id:'71ukzgz',name:'Cx13龍王閃擊',price:600,costJpy:1980,costTwd:415.8,stock:7,sold:0,note:''},
+  {id:'tno17gk',name:'Cx14騎士堡壘',price:700,costJpy:2200,costTwd:462.0,stock:8,sold:2,note:''},
+  {id:'va0kqny',name:'Cx15邪神狂怒',price:600,costJpy:1399,costTwd:293.79,stock:9,sold:3,note:''},
+  {id:'rvngfdo',name:'Cx17-劍心',price:650,costJpy:1480,costTwd:310.8,stock:1,sold:1,note:''},
+  {id:'d9p8alc',name:'Cx17抽抽包',price:850,costJpy:1480,costTwd:310.8,stock:4,sold:0,note:''},
+  {id:'i1p8d6y',name:'Cx17抽抽包',price:650,costJpy:1480,costTwd:310.8,stock:4,sold:0,note:''},
+  {id:'74hlb8w',name:'Bx01蒼龍神劍',price:650,costJpy:1800,costTwd:378.0,stock:1,sold:1,note:''},
+  {id:'luugxau',name:'Bx13騎士長槍',price:550,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'4oc9d9c',name:'Bx26獨角劍心',price:550,costJpy:1380,costTwd:289.8,stock:1,sold:0,note:''},
+  {id:'v9mvdgi',name:'Bx31暴龍抽抽包',price:600,costJpy:1400,costTwd:294.0,stock:6,sold:5,note:''},
+  {id:'x90efvu',name:'Bx33皓戰猛虎',price:500,costJpy:1140,costTwd:239.4,stock:2,sold:2,note:''},
+  {id:'nq89hvi',name:'Bx34蒼穹龍騎士',price:900,costJpy:1880,costTwd:394.8,stock:1,sold:0,note:''},
+  {id:'bb3cbao',name:'Bx35-藍鳳',price:1500,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'oqg4yki',name:'Bx35-神杖',price:2500,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'ed04pxq',name:'Bx35-神杖',price:3200,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'r2o7525',name:'Bx44三角強襲',price:450,costJpy:1299,costTwd:272.79,stock:4,sold:3,note:''},
+  {id:'vd9cglw',name:'Bx48黑色抽抽包',price:1000,costJpy:1700,costTwd:357.0,stock:1,sold:1,note:''},
+  {id:'r1y69pe',name:'Bx48黑色抽抽包',price:900,costJpy:1700,costTwd:357.0,stock:1,sold:1,note:''},
+  {id:'t8ceeci',name:'Bx48黑色抽抽包',price:0,costJpy:1700,costTwd:357.0,stock:2,sold:0,note:''},
+  {id:'y3qou34',name:'Bx49蒼龍突擊',price:1300,costJpy:2199,costTwd:461.79,stock:14,sold:14,note:''},
+  {id:'1lhho8y',name:'Bx49蒼龍突擊',price:1600,costJpy:2199,costTwd:461.79,stock:2,sold:2,note:''},
+  {id:'8ysgzkv',name:'Bx49蒼龍突擊',price:1500,costJpy:2199,costTwd:461.79,stock:2,sold:2,note:''},
+  {id:'h353dh5',name:'Bx49蒼龍突擊',price:1000,costJpy:2199,costTwd:461.79,stock:8,sold:0,note:''},
+  {id:'y2ab85u',name:'UX02惡魔重錘',price:800,costJpy:1620,costTwd:340.2,stock:2,sold:0,note:''},
+  {id:'j8baxom',name:'Ux09武士星劍',price:1000,costJpy:3300,costTwd:693.0,stock:5,sold:5,note:''},
+  {id:'yeicyu6',name:'Ux09武士星劍',price:900,costJpy:3300,costTwd:693.0,stock:1,sold:1,note:''},
+  {id:'tyty77c',name:'Ux11衝擊龍神',price:1500,costJpy:2170,costTwd:455.7,stock:5,sold:3,note:''},
+  {id:'4r0s6vw',name:'Ux11衝擊龍神',price:1400,costJpy:2170,costTwd:455.7,stock:4,sold:4,note:''},
+  {id:'73qg4v2',name:'Ux14天蠍長矛',price:700,costJpy:1880,costTwd:394.8,stock:2,sold:0,note:''},
+  {id:'54xmge0',name:'Ux16時鐘抽抽包',price:0,costJpy:0,costTwd:0,stock:0,sold:0,note:''},
+  {id:'1pwfy85',name:'UX17隕星龍騎士',price:1100,costJpy:1880,costTwd:394.8,stock:2,sold:2,note:''},
+  {id:'6hem4lt',name:'Ux18抽抽包',price:700,costJpy:1600,costTwd:336.0,stock:1,sold:0,note:''},
+  {id:'yifhobo',name:'Ux19彈丸獅鷲',price:650,costJpy:2080,costTwd:436.8,stock:1,sold:1,note:''},
+  {id:'yp1m537',name:'Ux19彈丸獅鷲',price:950,costJpy:2080,costTwd:436.8,stock:3,sold:3,note:''},
+  {id:'vuccazr',name:'Ux19彈丸獅鷲',price:1000,costJpy:2080,costTwd:436.8,stock:20,sold:5,note:''},
+  {id:'m1lps7i',name:'Bx09通行證',price:1500,costJpy:2700,costTwd:567.0,stock:3,sold:3,note:''},
+  {id:'62dhf2f',name:'Bx09通行證',price:1700,costJpy:3300,costTwd:693.0,stock:4,sold:2,note:''},
+  {id:'c65fhbu',name:'Bx09通行證',price:1700,costJpy:4000,costTwd:840.0,stock:2,sold:2,note:''},
+  {id:'tt39wir',name:'BX41握把（紅）',price:400,costJpy:1080,costTwd:226.8,stock:3,sold:3,note:''},
+  {id:'d9x7dcp',name:'Bx42握把（藍）',price:400,costJpy:1350,costTwd:283.5,stock:2,sold:2,note:''},
+  {id:'091g4id',name:'Bx18發射器（黑）',price:400,costJpy:990,costTwd:207.9,stock:7,sold:6,note:''},
+  {id:'muzob3y',name:'BX28發射器（白）',price:500,costJpy:990,costTwd:207.9,stock:2,sold:2,note:''},
+  {id:'gx8g3j8',name:'BX00發射器（綠）',price:500,costJpy:990,costTwd:207.9,stock:1,sold:1,note:''},
+  {id:'2lx4dnl',name:'Bx00發射器（橘）',price:500,costJpy:990,costTwd:207.9,stock:3,sold:3,note:''},
+  {id:'7qlppyp',name:'Bx00發射器（粉）',price:500,costJpy:990,costTwd:207.9,stock:1,sold:0,note:''},
+  {id:'qxd37yw',name:'Bx25陀螺包（黑）',price:1200,costJpy:3400,costTwd:714.0,stock:2,sold:2,note:''},
+  {id:'ce69ym4',name:'Bx25陀螺包（黑）',price:1308,costJpy:3400,costTwd:714.0,stock:4,sold:2,note:''},
+  {id:'8fnq53v',name:'BX43陀螺包（白）',price:1100,costJpy:3480,costTwd:730.8,stock:5,sold:2,note:''},
+  {id:'afjmej2',name:'BX-00讀賣巨人聯名款',price:2300,costJpy:5500,costTwd:1155.0,stock:1,sold:1,note:''},
+  {id:'z50qxqb',name:'BX-00鮫鯊鋒鰭',price:1100,costJpy:4000,costTwd:840.0,stock:1,sold:1,note:''},
+  {id:'8ap81su',name:'一番賞發射器',price:1400,costJpy:1350,costTwd:283.5,stock:1,sold:1,note:''},
+  {id:'s7753xn',name:'Bx10戰鬥盤',price:1800,costJpy:2250,costTwd:472.5,stock:6,sold:4,note:''},
+  {id:'i72za3h',name:'Cx16龍王戰鬥盤',price:3200,costJpy:5980,costTwd:1255.8,stock:1,sold:1,note:''},
+  {id:'z7012dh',name:'Cx04戰鬥盤',price:2700,costJpy:6800,costTwd:1428.0,stock:1,sold:1,note:''},
+  {id:'y50tmwu',name:'Ux08霜灰銀狼',price:900,costJpy:2200,costTwd:462.0,stock:4,sold:1,note:''},
+  {id:'cbi9jhh',name:'Bx00龍騎士',price:0,costJpy:0,costTwd:0,stock:0,sold:0,note:''},
+  {id:'6od4ftt',name:'Bx47發射器 左旋（紅）',price:450,costJpy:990,costTwd:207.9,stock:5,sold:0,note:''},
+  {id:'w5znctg',name:'Bx-48 黑蒼穹',price:900,costJpy:2200,costTwd:462.0,stock:1,sold:1,note:''},
+  {id:'4gzfpaa',name:'Bx-48 黑蒼穹',price:900,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'cye1q54',name:'Bx-35 02',price:350,costJpy:1600,costTwd:336.0,stock:2,sold:2,note:''},
+  {id:'yiz3zp3',name:'Bx-35 03',price:350,costJpy:1600,costTwd:336.0,stock:2,sold:2,note:''},
+  {id:'cu6tgk3',name:'Bx-35 06',price:350,costJpy:1600,costTwd:336.0,stock:2,sold:2,note:''},
+  {id:'zrqn7w9',name:'Cx17 04',price:350,costJpy:1600,costTwd:336.0,stock:1,sold:1,note:''},
+  {id:'qtcev05',name:'Cx17 06',price:350,costJpy:1600,costTwd:336.0,stock:2,sold:2,note:''},
+  {id:'tkn8n9w',name:'Bx00 紅爆擊天馬',price:2000,costJpy:7000,costTwd:1470.0,stock:1,sold:1,note:''},
+  {id:'xuay2de',name:'Cx16龍王戰鬥盤',price:2900,costJpy:5980,costTwd:1255.8,stock:5,sold:1,note:''},
+  {id:'p99y4cf',name:'Cx18腕龍鞭打',price:1500,costJpy:1600,costTwd:336.0,stock:7,sold:2,note:''},
+  {id:'cmy0ry3',name:'Cx18腕龍鞭打',price:1100,costJpy:1600,costTwd:336.0,stock:5,sold:5,note:''},
+  {id:'dpa5gml',name:'UX01 爆刃',price:1600,costJpy:2200,costTwd:462.0,stock:3,sold:1,note:''},
+  {id:'i3jzctp',name:'Bx23鳳凰飛翼',price:1500,costJpy:2200,costTwd:462.0,stock:1,sold:1,note:''},
+  {id:'dy07l88',name:'Bx23鳳凰飛翼',price:1700,costJpy:2200,costTwd:462.0,stock:1,sold:1,note:''},
+  {id:'43crg4t',name:'UX00大蛇',price:8000,costJpy:35000,costTwd:7350.0,stock:1,sold:1,note:''},
+  {id:'vfv3lsu',name:'Cx00蒼龍勇氣黑金',price:3000,costJpy:13200,costTwd:2772.0,stock:2,sold:2,note:''},
+  {id:'jvfp53v',name:'Bx00絞鯊鋒旗 黑融版',price:8000,costJpy:30000,costTwd:6300.0,stock:1,sold:0,note:''},
+  {id:'akjssdv',name:'Bx51發射器（黑綠）',price:650,costJpy:990,costTwd:207.9,stock:9,sold:0,note:''},
+  {id:'tqe7rqp',name:'Bx11 黑握把',price:450,costJpy:900,costTwd:189.0,stock:2,sold:0,note:''},
+  {id:'uh8bmng',name:'Cx04 蒼龍盤',price:2700,costJpy:5800,costTwd:1218.0,stock:1,sold:1,note:''},
+  {id:'g36n3yn',name:'Ux00武士新劍（足球版）',price:4500,costJpy:2200,costTwd:462.0,stock:1,sold:1,note:''},
+  {id:'nj2mmtc',name:'Cx00戰神伏特',price:4200,costJpy:15000,costTwd:3150.0,stock:1,sold:1,note:''},
+  {id:'0jvud7w',name:'惡魔戰錘 二手',price:0,costJpy:1548,costTwd:325.08,stock:1,sold:0,note:''},
 ];
 
 // ── Storage ─────────────────────────────────────────────────────────────────
@@ -1191,65 +689,62 @@ function Dashboard({ stats, data }) {
   );
 
   return (
-    <div style={S.page}>
+    <div style={{ ...S.page, paddingBottom: 16 }}>
       <h2 style={S.pageTitle}>損益總覽</h2>
-      <p style={{ color: '#64748b', fontSize: 12, marginBottom: 16 }}>
-        匯率：1日幣＝NT${data.exchangeRate} ｜ 共 {data.products.length} 件商品
-        ｜ 已售 {stats.totalSold} 件
+      <p style={{ color: '#64748b', fontSize: 13, marginBottom: 12 }}>
+        匯率 1日幣＝NT${data.exchangeRate}　共 {data.products.length} 件　已售 {stats.totalSold} 件
       </p>
       {missingCost.length > 0 && (
         <div style={S.warnBanner}>
-          ⚠️ {missingCost.map((p) => p.name).join('、')}{' '}
-          缺少成本，損益計算不準確
+          ⚠️ {missingCost.map((p) => p.name).join('、')} 缺少成本，損益計算不準確
         </div>
       )}
-      <div style={S.cardGrid}>
-        {cards.map((c) => (
-          <div key={c.label} style={S.statCard}>
-            <div style={S.statLabel}>{c.label}</div>
-            <div style={{ ...S.statValue, color: c.color }}>
-              {c.unit && <span style={S.statUnit}>{c.unit} </span>}
-              {c.value}
-            </div>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+        <div style={{ ...S.statCard, flex: 1, padding: '16px' }}>
+          <div style={{ fontSize: 12, color: '#64748b', marginBottom: 4 }}>✅ 已實現損益</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: stats.realized >= 0 ? '#4ade80' : '#f87171', letterSpacing: -1 }}>
+            NT${fmt(stats.realized)}
+          </div>
+        </div>
+        <div style={{ ...S.statCard, flex: 1, padding: '16px' }}>
+          <div style={{ fontSize: 12, color: '#64748b', marginBottom: 4 }}>🎯 全數售出淨利</div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: '#34d399', letterSpacing: -1 }}>
+            NT${fmt(stats.fullProfit)}
+          </div>
+        </div>
+      </div>
+      <div style={{ background: '#1e293b', borderRadius: 14, padding: '12px 16px', marginBottom: 10 }}>
+        {[
+          { label: '📈 總銷售收入', value: 'NT$' + fmt(stats.revenue), color: '#60a5fa' },
+          { label: '💸 毛利率', value: fmtPct(stats.margin), color: '#fb923c' },
+          { label: '🔄 已回本比例', value: fmtPct(stats.recovery), color: '#a78bfa' },
+          { label: '💰 整體淨損益', value: 'NT$' + fmt(stats.netProfit), color: stats.netProfit >= 0 ? '#4ade80' : '#f87171' },
+        ].map((c, i, arr) => (
+          <div key={c.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: i === 0 ? 0 : 10, paddingBottom: i === arr.length - 1 ? 0 : 10, borderBottom: i < arr.length - 1 ? '1px solid #334155' : 'none' }}>
+            <span style={{ fontSize: 14, color: '#94a3b8' }}>{c.label}</span>
+            <span style={{ fontSize: 16, fontWeight: 700, color: c.color }}>{c.value}</span>
           </div>
         ))}
       </div>
       <div style={S.chartCard}>
         <h3 style={S.chartTitle}>💰 資金分佈</h3>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={180}>
           <PieChart>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              innerRadius={55}
-              outerRadius={85}
-              dataKey="value"
-              label={({ name, percent }) =>
-                `${name} ${(percent * 100).toFixed(0)}%`
-              }
-              labelLine={false}
-              fontSize={10}
-            >
-              {pieData.map((_, i) => (
-                <Cell key={i} fill={COLORS.chart[i]} />
-              ))}
+            <Pie data={pieData} cx="50%" cy="50%" innerRadius={48} outerRadius={72} dataKey="value" label={({ name, percent }) => name + ' ' + (percent * 100).toFixed(0) + '%'} labelLine={false} fontSize={11}>
+              {pieData.map((_, i) => (<Cell key={i} fill={COLORS.chart[i]} />))}
             </Pie>
-            <Tooltip formatter={(v) => `NT$ ${fmt(v)}`} />
+            <Tooltip formatter={(v) => 'NT$ ' + fmt(v)} />
           </PieChart>
         </ResponsiveContainer>
       </div>
       {barData.length > 0 && (
         <div style={S.chartCard}>
           <h3 style={S.chartTitle}>🔥 獲利前五商品</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart
-              data={barData}
-              margin={{ left: 0, right: 0, top: 5, bottom: 5 }}
-            >
-              <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} />
-              <Tooltip formatter={(v) => `NT$ ${fmt(v)}`} />
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={barData} margin={{ left: 0, right: 0, top: 4, bottom: 4 }}>
+              <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <Tooltip formatter={(v) => 'NT$ ' + fmt(v)} />
               <Bar dataKey="profit" fill="#fb923c" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -1260,8 +755,8 @@ function Dashboard({ stats, data }) {
           <h3 style={{ ...S.chartTitle, color: '#f87171' }}>⚠️ 注意虧損商品</h3>
           {stats.losing.map((p) => (
             <div key={p.name} style={S.alertRow}>
-              <span style={{ color: '#e2e8f0' }}>{p.name}</span>
-              <span style={{ color: '#f87171' }}>NT$ {fmt(p.profit)}</span>
+              <span style={{ color: '#e2e8f0', fontSize: 14 }}>{p.name}</span>
+              <span style={{ color: '#f87171', fontSize: 14, fontWeight: 700 }}>NT$ {fmt(p.profit)}</span>
             </div>
           ))}
         </div>
@@ -1818,7 +1313,7 @@ const S = {
   app: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    height: '100dvh',
     maxWidth: 600,
     margin: '0 auto',
     background: '#0f172a',
@@ -1873,7 +1368,7 @@ const S = {
     textAlign: 'center',
     flexShrink: 0,
   },
-  main: { flex: 1, overflowY: 'auto', overflowX: 'hidden' },
+  main: { flex: 1, overflowY: 'auto', overflowX: 'hidden', minHeight: 0 },
   nav: {
     display: 'flex',
     borderTop: '1px solid #1e293b',
@@ -2049,8 +1544,8 @@ const S = {
   productCard: {
     background: '#1e293b',
     borderRadius: 14,
-    padding: 14,
-    marginBottom: 10,
+    padding: 12,
+    marginBottom: 6,
   },
   productHeader: {
     display: 'flex',
@@ -2113,11 +1608,11 @@ const S = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
     marginTop: 4,
     background: '#0f172a',
     borderRadius: 10,
-    padding: '8px 12px',
+    padding: '6px 10px',
   },
   stockInfo: { display: 'flex', alignItems: 'center' },
   sellControls: { display: 'flex', alignItems: 'center', gap: 6 },
