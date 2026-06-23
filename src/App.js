@@ -193,10 +193,7 @@ async function getGoogleToken() {
 
 // 讀取 Sheets 資料（庫存+賣出數量）
 async function readFromSheets(token) {
-  const range = `${SHEET_NAME}!A3:K200`;
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(
-    range
-  )}`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A3:K200`;
   const resp = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
