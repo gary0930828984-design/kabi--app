@@ -224,8 +224,6 @@ async function writeToSheets(token, products) {
     });
   });
 
-  if (updates.length === 0) return;
-
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
   const resp = await fetch(url, {
     method: 'POST',
