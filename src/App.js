@@ -210,6 +210,7 @@ async function writeToSheets(token, products) {
   // 先讀取現有資料，找出對應商品列（以商品名稱比對）
   const rows = await readFromSheets(token);
   const updates = [];
+  const newRows = [];
 
   products.forEach((p) => {
     const idx = rows.findIndex(
