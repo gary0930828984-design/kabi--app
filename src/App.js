@@ -207,33 +207,29 @@ async function readFromSheets(token) {
 
 // 把 App 商品資料寫回 Sheets（只更新 E=庫存、F=賣出）
 async function writeToSheets(token, products) {
-  // 先讀取現有資料，找出對應商品列（以商品名稱比對）
   const rows = await readFromSheets(token);
   const updates = [];
   const newRows = [];
-
   products.forEach((p) => {
-    const idx = rows.findIndex(
-      (r) => r[0] && r[0].toString().trim() === p.name.trim()
-    );
-    if (idx === -1) return;
-    const rowNum = idx + 3; // A3 開始
-    updates.push({
-      range: `${SHEET_NAME}!E${rowNum}:F${rowNum}`,
-      values: [[p.stock, p.sold]],
-    });
+    const idx = rows.findIndex((r) => r[0] && r[0].toString().trim() === p.name.trim());
+    if (idx !== -1) {
+      const rowNum = idx + 3;
+      updates.push({ range: `${SHEET_NAME}!E${rowNum}:F${rowNum}`, values: [[p.stock, p.sold]] });
+    } else {
+      const costTwd = p.costJpy ? (p.costJpy * 0.21).toFixed(2) : p.costTwd || 0;
+      newRows.push([p.name, p.price||0, p.costJpy||0, costTwd, p.stock||0, p.sold||0]);
+    }
   });
-
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ valueInputOption: 'RAW', data: updates }),
-  });
-  if (!resp.ok) throw new Error('Sheets 寫入失敗');
+  if (updates.length > 0) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
+    const r1 = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valueInputOption: 'RAW', data: updates }) });
+    if (!r1.ok) throw new Error('Sheets 寫入失敗');
+  }
+  if (newRows.length > 0) {
+    const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A:F:append?valueInputOption=RAW`;
+    const r2 = await fetch(appendUrl, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: newRows }) });
+    if (!r2.ok) throw new Error('Sheets 新增失敗');
+  }
 }
 
 // ── 損益計算 ─────────────────────────────────────────────────────────────────
