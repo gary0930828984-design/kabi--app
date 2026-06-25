@@ -16,6 +16,7 @@ const USERS_KEY = 'kabi_users';
 const SESSION_KEY = 'kabi_session';
 const DATA_PREFIX = 'kabi_data_';
 const SHEET_ID = '124cLeWSpnOmYA6qHT2tKbxo9MF697ncR';
+const SHEET_GID = '1004638106';
 const CLIENT_ID =
   '957526226643-8jqf17mg6lsi3crnnagiipgfd5jv8p3t.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
@@ -203,6 +204,48 @@ async function readFromSheets(token) {
   if (!resp.ok) throw new Error('Sheets 讀取失敗');
   const data = await resp.json();
   return data.values || [];
+}
+
+function readPublicSheetRows() {
+  return new Promise((resolve, reject) => {
+    const callbackName = `kabiSheet_${Date.now()}_${Math.random()
+      .toString(36)
+      .slice(2)}`;
+    const query = encodeURIComponent('select A,B,C,D,E,F');
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${callbackName}&gid=${SHEET_GID}&headers=0&tq=${query}`;
+    const script = document.createElement('script');
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+    };
+
+    window[callbackName] = (payload) => {
+      cleanup();
+      if (payload?.status !== 'ok') {
+        reject(new Error('公開試算表讀取失敗'));
+        return;
+      }
+      const rows = (payload.table?.rows || [])
+        .map((row) => (row.c || []).map((cell) => cell?.v ?? ''))
+        .filter((row) => {
+          const name = (row[0] || '').toString().trim();
+          return (
+            name &&
+            !name.startsWith('卡比') &&
+            !name.startsWith('※') &&
+            name !== '商品名稱'
+          );
+        });
+      resolve(rows);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('公開試算表讀取失敗'));
+    };
+    script.src = url;
+    document.head.appendChild(script);
+  });
 }
 
 const toNumber = (value) => {
@@ -400,26 +443,36 @@ export default function App() {
       gToken = token;
       setSheetsStatus('connected');
       showToast('✅ Google Sheets 已連線');
-      await syncFromSheets();
     } catch {
-      setSheetsStatus('error');
-      showToast('❌ 授權失敗，請重試', 'error');
+      gToken = null;
+      setSheetsStatus('disconnected');
+      showToast('⚠️ 授權失敗，先用公開資料同步');
     }
+    await syncFromSheets();
   };
 
   const syncFromSheets = async () => {
     setSheetsSyncing(true);
     try {
-      let token = gToken;
-      if (!token) {
-        setSheetsStatus('connecting');
-        token = await getGoogleToken();
-        gToken = token;
+      let rows;
+      try {
+        rows = await readPublicSheetRows();
+      } catch {
+        let token = gToken;
+        if (!token) {
+          setSheetsStatus('connecting');
+          token = await getGoogleToken();
+          gToken = token;
+          setSheetsStatus('connected');
+        }
+        rows = await readFromSheets(token);
+      }
+      rows = rows.filter((r) => (r[0] || '').toString().trim());
+      if (!gToken) {
+        setSheetsStatus('disconnected');
+      } else {
         setSheetsStatus('connected');
       }
-      const rows = (await readFromSheets(token)).filter((r) =>
-        (r[0] || '').toString().trim()
-      );
       const usedSheetRows = new Set();
       const updated = (data.products || []).map((p) => {
         const idx = rows.findIndex((r) => sameProductAndPrice(p, r));
