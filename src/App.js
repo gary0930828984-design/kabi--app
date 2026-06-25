@@ -533,10 +533,10 @@ export default function App() {
     error: '#f87171',
   }[sheetsStatus];
   const sheetsLabel = {
-    disconnected: '未連線',
+    disconnected: '同步試算表',
     connecting: '連線中...',
     connected: '已連線',
-    error: '連線失敗',
+    error: '同步試算表',
   }[sheetsStatus];
 
   return (
@@ -558,9 +558,7 @@ export default function App() {
               color: sheetsColor,
               borderColor: sheetsColor,
             }}
-            onClick={
-              sheetsStatus === 'connected' ? syncFromSheets : connectSheets
-            }
+            onClick={syncFromSheets}
           >
             📊 {sheetsLabel}
           </span>
@@ -571,9 +569,9 @@ export default function App() {
       </header>
 
       {/* Sheets 說明橫幅 */}
-      {sheetsStatus === 'disconnected' && (
-        <div style={S.sheetsBanner} onClick={connectSheets}>
-          🔗 點此連結 Google Sheets，賣出時自動同步庫存
+      {(sheetsStatus === 'disconnected' || sheetsStatus === 'error') && (
+        <div style={S.sheetsBanner} onClick={syncFromSheets}>
+          📥 點此從試算表更新 app 數量
         </div>
       )}
       {sheetsStatus === 'connected' && (
