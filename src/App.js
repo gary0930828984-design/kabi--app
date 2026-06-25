@@ -400,6 +400,7 @@ export default function App() {
       gToken = token;
       setSheetsStatus('connected');
       showToast('✅ Google Sheets 已連線');
+      await syncFromSheets();
     } catch {
       setSheetsStatus('error');
       showToast('❌ 授權失敗，請重試', 'error');
