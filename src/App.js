@@ -407,10 +407,16 @@ export default function App() {
   };
 
   const syncFromSheets = async () => {
-    if (!gToken) return;
     setSheetsSyncing(true);
     try {
-      const rows = (await readFromSheets(gToken)).filter((r) =>
+      let token = gToken;
+      if (!token) {
+        setSheetsStatus('connecting');
+        token = await getGoogleToken();
+        gToken = token;
+        setSheetsStatus('connected');
+      }
+      const rows = (await readFromSheets(token)).filter((r) =>
         (r[0] || '').toString().trim()
       );
       const usedSheetRows = new Set();
@@ -434,6 +440,7 @@ export default function App() {
       await persist({ ...data, products: [...updated, ...newProducts] });
       showToast(`✅ 已從 Sheets 同步，共 ${updated.length + newProducts.length} 件商品`);
     } catch {
+      setSheetsStatus('error');
       showToast('❌ 讀取 Sheets 失敗', 'error');
     } finally {
       setSheetsSyncing(false);
