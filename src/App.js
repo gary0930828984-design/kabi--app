@@ -193,10 +193,10 @@ async function getGoogleToken() {
 
 // 讀取 Sheets 資料（商品資料）
 async function readFromSheets(token) {
-  const range = `${SHEET_NAME}!A3:K500`;
+  const range = `${SHEET_NAME}!A4:K500`;
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(
     range
-  )}`;
+  )}?valueRenderOption=UNFORMATTED_VALUE`;
   const resp = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -205,12 +205,18 @@ async function readFromSheets(token) {
   return data.values || [];
 }
 
+const toNumber = (value) => {
+  if (typeof value === 'number') return value;
+  const normalized = (value ?? '').toString().replace(/[^\d.-]/g, '');
+  return Number(normalized) || 0;
+};
+
 const productToSheetRow = (p) => {
-  const stock = Number(p.stock) || 0;
-  const sold = Number(p.sold) || 0;
-  const price = Number(p.price) || 0;
-  const costJpy = Number(p.costJpy) || 0;
-  const costTwd = Number(p.costTwd) || 0;
+  const stock = toNumber(p.stock);
+  const sold = toNumber(p.sold);
+  const price = toNumber(p.price);
+  const costJpy = toNumber(p.costJpy);
+  const costTwd = toNumber(p.costTwd);
   const remain = Math.max(0, stock - sold);
   const revenue = sold * price;
   const soldCost = sold * costTwd;
@@ -235,17 +241,17 @@ const productToSheetRow = (p) => {
 const sheetRowToProduct = (row) => ({
   id: genId(),
   name: (row[0] || '').toString().trim(),
-  price: Number(row[1]) || 0,
-  costJpy: Number(row[2]) || 0,
-  costTwd: Number(row[3]) || 0,
-  stock: Number(row[4]) || 0,
-  sold: Number(row[5]) || 0,
+  price: toNumber(row[1]),
+  costJpy: toNumber(row[2]),
+  costTwd: toNumber(row[3]),
+  stock: toNumber(row[4]),
+  sold: toNumber(row[5]),
   note: '',
 });
 
 const sameProductAndPrice = (p, row) =>
   (p.name || '').trim() === (row[0] || '').toString().trim() &&
-  (Number(p.price) || 0) === (Number(row[1]) || 0);
+  toNumber(p.price) === toNumber(row[1]);
 
 // 把 App 商品資料寫回 Sheets：既有商品更新庫存/賣出，新商品自動新增一列
 async function writeToSheets(token, products) {
@@ -255,10 +261,10 @@ async function writeToSheets(token, products) {
   products.forEach((p) => {
     const idx = rows.findIndex((r) => sameProductAndPrice(p, r));
     if (idx !== -1) {
-      const rowNum = idx + 3;
+      const rowNum = idx + 4;
       updates.push({
         range: `${SHEET_NAME}!E${rowNum}:F${rowNum}`,
-        values: [[Number(p.stock) || 0, Number(p.sold) || 0]],
+        values: [[toNumber(p.stock), toNumber(p.sold)]],
       });
     } else {
       appends.push(productToSheetRow(p));
@@ -415,11 +421,11 @@ export default function App() {
         const row = rows[idx];
         return {
           ...p,
-          price: Number(row[1]) || p.price || 0,
-          costJpy: Number(row[2]) || p.costJpy || 0,
-          costTwd: Number(row[3]) || p.costTwd || 0,
-          stock: Number(row[4]) || 0,
-          sold: Number(row[5]) || 0,
+          price: toNumber(row[1]) || p.price || 0,
+          costJpy: toNumber(row[2]) || p.costJpy || 0,
+          costTwd: toNumber(row[3]) || p.costTwd || 0,
+          stock: toNumber(row[4]),
+          sold: toNumber(row[5]),
         };
       });
       const newProducts = rows
@@ -517,6 +523,7 @@ export default function App() {
             borderColor: '#14532d',
             color: '#4ade80',
           }}
+          onClick={syncFromSheets}
         >
           ✅ Sheets 已連線｜更新庫存時自動同步．點橫幅從 Sheets 拉取最新資料
         </div>
