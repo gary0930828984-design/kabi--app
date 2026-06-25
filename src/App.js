@@ -191,9 +191,12 @@ async function getGoogleToken() {
   });
 }
 
-// 讀取 Sheets 資料（庫存+賣出數量）
+// 讀取 Sheets 資料（商品資料）
 async function readFromSheets(token) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A3:K200`;
+  const range = `${SHEET_NAME}!A3:K500`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(
+    range
+  )}`;
   const resp = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -202,29 +205,76 @@ async function readFromSheets(token) {
   return data.values || [];
 }
 
-// 把 App 商品資料寫回 Sheets（只更新 E=庫存、F=賣出）
+const productToSheetRow = (p) => {
+  const stock = Number(p.stock) || 0;
+  const sold = Number(p.sold) || 0;
+  const price = Number(p.price) || 0;
+  const costJpy = Number(p.costJpy) || 0;
+  const costTwd = Number(p.costTwd) || 0;
+  const remain = Math.max(0, stock - sold);
+  const revenue = sold * price;
+  const soldCost = sold * costTwd;
+  const stockCost = remain * costTwd;
+  const profit = revenue - soldCost;
+
+  return [
+    p.name || '',
+    price,
+    costJpy,
+    costTwd,
+    stock,
+    sold,
+    remain,
+    revenue,
+    soldCost,
+    stockCost,
+    profit,
+  ];
+};
+
+const sheetRowToProduct = (row) => ({
+  id: genId(),
+  name: (row[0] || '').toString().trim(),
+  price: Number(row[1]) || 0,
+  costJpy: Number(row[2]) || 0,
+  costTwd: Number(row[3]) || 0,
+  stock: Number(row[4]) || 0,
+  sold: Number(row[5]) || 0,
+  note: '',
+});
+
+const sameProductAndPrice = (p, row) =>
+  (p.name || '').trim() === (row[0] || '').toString().trim() &&
+  (Number(p.price) || 0) === (Number(row[1]) || 0);
+
+// 把 App 商品資料寫回 Sheets：既有商品更新庫存/賣出，新商品自動新增一列
 async function writeToSheets(token, products) {
   const rows = await readFromSheets(token);
   const updates = [];
-  const newRows = [];
+  const appends = [];
   products.forEach((p) => {
-    const idx = rows.findIndex((r) => r[0] && r[0].toString().trim() === p.name.trim());
+    const idx = rows.findIndex((r) => sameProductAndPrice(p, r));
     if (idx !== -1) {
       const rowNum = idx + 3;
-      updates.push({ range: `${SHEET_NAME}!E${rowNum}:F${rowNum}`, values: [[p.stock, p.sold]] });
+      updates.push({
+        range: `${SHEET_NAME}!E${rowNum}:F${rowNum}`,
+        values: [[Number(p.stock) || 0, Number(p.sold) || 0]],
+      });
     } else {
-      const costTwd = p.costJpy ? (p.costJpy * 0.21).toFixed(2) : p.costTwd || 0;
-      newRows.push([p.name, p.price||0, p.costJpy||0, costTwd, p.stock||0, p.sold||0]);
+      appends.push(productToSheetRow(p));
     }
   });
   if (updates.length > 0) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
-    const r1 = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valueInputOption: 'RAW', data: updates }) });
+    const r1 = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: updates }) });
     if (!r1.ok) throw new Error('Sheets 寫入失敗');
   }
-  if (newRows.length > 0) {
-    const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A:F:append?valueInputOption=RAW`;
-    const r2 = await fetch(appendUrl, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: newRows }) });
+  if (appends.length > 0) {
+    const appendRange = `${SHEET_NAME}!A3:K`;
+    const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(
+      appendRange
+    )}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+    const r2 = await fetch(appendUrl, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: appends }) });
     if (!r2.ok) throw new Error('Sheets 新增失敗');
   }
 }
@@ -354,20 +404,29 @@ export default function App() {
     if (!gToken) return;
     setSheetsSyncing(true);
     try {
-      const rows = await readFromSheets(gToken);
-      const updated = data.products.map((p) => {
-        const row = rows.find(
-          (r) => r[0] && r[0].toString().trim() === p.name.trim()
-        );
-        if (!row) return p;
+      const rows = (await readFromSheets(gToken)).filter((r) =>
+        (r[0] || '').toString().trim()
+      );
+      const usedSheetRows = new Set();
+      const updated = (data.products || []).map((p) => {
+        const idx = rows.findIndex((r) => sameProductAndPrice(p, r));
+        if (idx === -1) return p;
+        usedSheetRows.add(idx);
+        const row = rows[idx];
         return {
           ...p,
-          stock: parseFloat(row[4]) || p.stock,
-          sold: parseFloat(row[5]) || p.sold,
+          price: Number(row[1]) || p.price || 0,
+          costJpy: Number(row[2]) || p.costJpy || 0,
+          costTwd: Number(row[3]) || p.costTwd || 0,
+          stock: Number(row[4]) || 0,
+          sold: Number(row[5]) || 0,
         };
       });
-      await persist({ ...data, products: updated });
-      showToast('✅ 已從 Sheets 同步資料');
+      const newProducts = rows
+        .filter((_, idx) => !usedSheetRows.has(idx))
+        .map(sheetRowToProduct);
+      await persist({ ...data, products: [...updated, ...newProducts] });
+      showToast(`✅ 已從 Sheets 同步，共 ${updated.length + newProducts.length} 件商品`);
     } catch {
       showToast('❌ 讀取 Sheets 失敗', 'error');
     } finally {
